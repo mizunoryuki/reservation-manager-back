@@ -1,0 +1,4 @@
+DROP TABLE IF EXISTS reservations;
+DROP TABLE IF EXISTS stores;
+DROP TABLE IF EXISTS refresh_tokens;
+DROP TABLE IF EXISTS users;
