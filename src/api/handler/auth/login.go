@@ -10,7 +10,6 @@ import (
 	"reservation-manager/db/generated"
 	"reservation-manager/models"
 	"reservation-manager/utils"
-
 )
 
 func LogInHandler(db *generated.Queries) http.HandlerFunc {
@@ -48,7 +47,7 @@ func LogInHandler(db *generated.Queries) http.HandlerFunc {
 
 
 		//JWT発行
-		accessToken, err := utils.GenerateJWT(user.Email,user.Role)
+		accessToken, err := utils.GenerateJWT(string(user.ID),user.Role)
 		if err != nil {
 			http.Error(w,"トークン生成に失敗しました",http.StatusInternalServerError)
 			return

@@ -11,20 +11,20 @@ import (
 
 // Claims に含める内容
 type Claims struct {
-	Email string `json:"email"`
-	Role string `json:"password"`
+	ID string `json:"user_id"`
+	Role string `json:"user_role"`
 	jwt.RegisteredClaims
 }
 
 // JWTの生成関数
-func GenerateJWT(email string,role generated.UsersRole) (string, error) {
+func GenerateJWT(id string,role generated.UsersRole) (string, error) {
 	jwtKey := []byte(os.Getenv("JWT_KEY"))
 
 	expirationTime := time.Now().Add(24 * time.Hour)
 
 	
 	claims := &Claims{
-		Email: email,
+		ID: id,
 		Role: string(role),
 		RegisteredClaims: jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expirationTime),

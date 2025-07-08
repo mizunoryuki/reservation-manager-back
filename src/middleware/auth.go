@@ -13,7 +13,7 @@ import (
 
 type contextKey string
 
-const UserEmailKey contextKey = "userEmail"
+const UserIDKey contextKey = "userID"
 const UserRoleKey contextKey = "userRole"
 
 //JWTによってルートの制御を行う
@@ -45,7 +45,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 		}
 
 		// コンテキストにユーザ情報を埋め込む
-		ctx := context.WithValue(r.Context(), UserEmailKey, claims.Email)
+		ctx := context.WithValue(r.Context(), UserIDKey, claims.ID)
 		ctx = context.WithValue(ctx, UserRoleKey, claims.Role)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
