@@ -15,10 +15,9 @@ return func(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.Header().Set("Content-Type","application/json")
-	if stores != nil {
-	json.NewEncoder(w).Encode(stores)
-	}else {
-		json.NewEncoder(w).Encode(0)
+	if err := json.NewEncoder(w).Encode(stores); err != nil {
+		http.Error(w, "JSONエンコードに失敗しました", http.StatusInternalServerError)
+		return
 	}
 	}
 }
