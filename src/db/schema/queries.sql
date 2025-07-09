@@ -52,6 +52,10 @@ VALUES (?, ?, ?);
 SELECT * FROM reservations
 ORDER BY visit_date DESC;
 
+-- name: GetReservationByID :one
+SELECT * FROM reservations
+WHERE id = ?;
+
 -- name: GetReservationsByUser :many
 SELECT * FROM reservations
 WHERE user_id = ?

@@ -216,6 +216,24 @@ func (q *Queries) GetRefreshTokenByUserID(ctx context.Context, userID int32) (Re
 	return i, err
 }
 
+const getReservationByID = `-- name: GetReservationByID :one
+SELECT id, user_id, store_id, visit_date, reserved_at FROM reservations
+WHERE id = ?
+`
+
+func (q *Queries) GetReservationByID(ctx context.Context, id int32) (Reservation, error) {
+	row := q.db.QueryRowContext(ctx, getReservationByID, id)
+	var i Reservation
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.StoreID,
+		&i.VisitDate,
+		&i.ReservedAt,
+	)
+	return i, err
+}
+
 const getReservationsByStoreAndDate = `-- name: GetReservationsByStoreAndDate :many
 SELECT id, user_id, store_id, visit_date, reserved_at FROM reservations
 WHERE store_id = ? AND DATE(visit_date) = ?
