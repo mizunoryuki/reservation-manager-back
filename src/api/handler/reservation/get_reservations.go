@@ -9,7 +9,7 @@ import (
 
 
 
-func GetReservationHandler(db *generated.Queries) http.HandlerFunc{
+func GetReservationsHandler(db *generated.Queries) http.HandlerFunc{
 return func(w http.ResponseWriter, r *http.Request) {
 	//予約取得
 	reservations, err := db.GetAllReservations(r.Context())
@@ -27,7 +27,7 @@ return func(w http.ResponseWriter, r *http.Request) {
 }
 
 //一般ユーザが予約情報を取得する関数
-func GenGetReservationHandler(db *generated.Queries) http.HandlerFunc{
+func GenGetReservationsHandler(db *generated.Queries) http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request) {
 		//headerからユーザid取得
 		userID,ok := middleware.UserIDFromContext(r.Context())
