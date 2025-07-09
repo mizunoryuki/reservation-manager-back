@@ -25,12 +25,14 @@ func DeleteStoreHandler(db *generated.Queries) http.HandlerFunc {
 		_,err = db.GetStoreByID(r.Context(), int32(store_id_int))
 		if err != nil {
 			http.Error(w,"指定されたidの店舗が見つかりませんでした",http.StatusInternalServerError)
+			return
 		}
 
 		// 店舗削除
 		err = db.DeleteStore(r.Context(),int32(store_id_int))
 		if err != nil {
 			http.Error(w,"店舗削除に失敗しました", http.StatusInternalServerError)
+			return
 		}
 
 		w.WriteHeader(http.StatusCreated)

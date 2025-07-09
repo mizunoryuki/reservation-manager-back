@@ -11,6 +11,7 @@ return func(w http.ResponseWriter, r *http.Request) {
 	stores, err := db.GetAllStores(r.Context())
 	if err != nil {
 		http.Error(w,"店舗の一覧取得に失敗しました",http.StatusInternalServerError)
+		return
 	}
 
 	w.Header().Set("Content-Type","application/json")

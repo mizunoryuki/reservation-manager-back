@@ -50,6 +50,7 @@ func CreateStoreHandler(db *generated.Queries) http.HandlerFunc {
 		})
 		if err != nil {
 			http.Error(w,"店舗登録に失敗しました", http.StatusInternalServerError)
+			return
 		}
 
 		w.WriteHeader(http.StatusCreated)
