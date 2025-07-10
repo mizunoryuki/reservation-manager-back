@@ -2,6 +2,7 @@ package reservation
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"reservation-manager/db/generated"
 	"reservation-manager/middleware"
@@ -14,6 +15,7 @@ return func(w http.ResponseWriter, r *http.Request) {
 	//予約取得
 	reservations, err := db.GetAllReservations(r.Context())
 	if err != nil {
+		log.Printf("GetAllReservations error : %v",err)
 		http.Error(w,"予約の一覧取得に失敗しました",http.StatusInternalServerError)
 		return
 	}
@@ -38,6 +40,7 @@ func GenGetReservationsHandler(db *generated.Queries) http.HandlerFunc{
 
 		reservations,err := db.GetReservationByID(r.Context(),int32(userID))
 		if err != nil {
+			log.Printf("GetReservationByID error : %v",err)
 			http.Error(w,"ユーザidから予約情報の取得に失敗しました",http.StatusForbidden)
 			return
 		}

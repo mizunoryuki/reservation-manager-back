@@ -2,6 +2,7 @@ package reservation
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"reservation-manager/db/generated"
 	"reservation-manager/middleware"
@@ -49,6 +50,7 @@ func CreateReservationHandler(db *generated.Queries) http.HandlerFunc{
 
 		visitTime,err := time.Parse("15:04",input.VisitTime)
 		if err != nil {
+			log.Printf("visitTime error: %v", err)
 			http.Error(w,"予約時間の形式を変換できませんでした",http.StatusInternalServerError)
 			return
 		}
@@ -59,6 +61,7 @@ func CreateReservationHandler(db *generated.Queries) http.HandlerFunc{
 		datetimeStr := input.VisitDate + " " + visitTimeStr
 		visitDateTime,err := time.Parse("2006-01-02 15:04",datetimeStr)
 		if err != nil {
+			log.Printf("visitDateTime error: %v", err)
 			http.Error(w, "日付フォーマットが不正です", http.StatusBadRequest)
 			return
 		}
@@ -72,6 +75,7 @@ func CreateReservationHandler(db *generated.Queries) http.HandlerFunc{
 
 		})
 		if err != nil {
+			log.Printf("CreateReservation error: %v", err)
 			http.Error(w,"予約に失敗しました",http.StatusInternalServerError)
 			return
 		}

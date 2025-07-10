@@ -42,8 +42,6 @@ func CreateStoreHandler(db *generated.Queries) http.HandlerFunc {
 			return
 		}
 
-		log.Printf("startTime: %v, endTime: %v", startTime, endTime)
-
 		// 店舗作成
 		//sqlcで生成したデータ構造に変換する
 		err = db.CreateStore(r.Context(),generated.CreateStoreParams{

@@ -2,6 +2,7 @@ package store
 
 import (
 	"net/http"
+	"log"
 	"reservation-manager/db/generated"
 	"strconv"
 	"strings"
@@ -24,6 +25,7 @@ func DeleteStoreHandler(db *generated.Queries) http.HandlerFunc {
 		//店舗探索
 		_,err = db.GetStoreByID(r.Context(), int32(store_id_int))
 		if err != nil {
+			log.Printf("GetStoreByID error : %v",err)
 			http.Error(w,"指定されたidの店舗が見つかりませんでした",http.StatusInternalServerError)
 			return
 		}
@@ -31,6 +33,7 @@ func DeleteStoreHandler(db *generated.Queries) http.HandlerFunc {
 		// 店舗削除
 		err = db.DeleteStore(r.Context(),int32(store_id_int))
 		if err != nil {
+			log.Printf("DeleteStore error : %v",err)
 			http.Error(w,"店舗削除に失敗しました", http.StatusInternalServerError)
 			return
 		}

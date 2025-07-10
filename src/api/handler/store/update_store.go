@@ -3,6 +3,7 @@ package store
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -50,12 +51,12 @@ func UpdateStoreHandler(db *generated.Queries) http.HandlerFunc {
 		defer r.Body.Close()
 
 		//時間文字列を事項形式に変換する
-		startTime, err := time.Parse("15:04", input.BusinessStartTime)
+		startTime, err := time.Parse("2006-01-02 15:04","2025-07-10" + " " + input.BusinessStartTime)
 		if err != nil {
 			http.Error(w, "開始時間の形式が不正です", http.StatusBadRequest)
 			return
 		}
-		endTime, err := time.Parse("15:04", input.BusinessEndTime)
+		endTime, err := time.Parse("2006-01-02 15:04","2025-07-10" + " " + input.BusinessEndTime)
 		if err != nil {
 			http.Error(w, "終了時間の形式が不正です", http.StatusBadRequest)
 			return
@@ -71,6 +72,7 @@ func UpdateStoreHandler(db *generated.Queries) http.HandlerFunc {
 			Details:           sql.NullString{String : input.Details,Valid: input.Details != ""},
 		})
 		if err != nil {
+			log.Printf("UpdateStore error : %v",err)
 			http.Error(w, "店舗情報の更新に失敗しました", http.StatusInternalServerError)
 			return
 		}
