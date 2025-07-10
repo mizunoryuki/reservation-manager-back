@@ -3,6 +3,7 @@ package store
 import (
 	"database/sql"
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -28,16 +29,20 @@ func CreateStoreHandler(db *generated.Queries) http.HandlerFunc {
 		}
 
 		//時間文字列を時間に変換
-		startTime, err := time.Parse("15:04", input.BusinessStartTime)
+		startTime, err := time.Parse("2006-01-02 15:04", "2025-07-10" + " "+ input.BusinessStartTime)
 		if err != nil {
+			log.Printf("startTime error: %v", err)
 			http.Error(w, "開始時間の形式が不正です", http.StatusBadRequest)
 			return
 		}
-		endTime, err := time.Parse("15:04", input.BusinessEndTime)
+		endTime, err := time.Parse("2006-01-02 15:04", "2025-07-10" + " "+ input.BusinessEndTime)
 		if err != nil {
+			log.Printf("endTime error: %v", err)
 			http.Error(w, "終了時間の形式が不正です", http.StatusBadRequest)
 			return
 		}
+
+		log.Printf("startTime: %v, endTime: %v", startTime, endTime)
 
 		// 店舗作成
 		//sqlcで生成したデータ構造に変換する
@@ -49,6 +54,7 @@ func CreateStoreHandler(db *generated.Queries) http.HandlerFunc {
 			Details: sql.NullString{String: input.Details, Valid: input.Details != ""},
 		})
 		if err != nil {
+			log.Printf("CreateStore error: %v", err)
 			http.Error(w,"店舗登録に失敗しました", http.StatusInternalServerError)
 			return
 		}

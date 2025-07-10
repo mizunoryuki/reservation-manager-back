@@ -56,8 +56,8 @@ func CreateReservationHandler(db *generated.Queries) http.HandlerFunc{
 		visitTimeStr := visitTime.Format("15:04")
 
 		//dbに格納する方式に予約情報を加工
-		datetimeStr := input.VisitDate + "-" + visitTimeStr
-		visitDateTime,err := time.Parse("2025-07-08-15:04",datetimeStr)
+		datetimeStr := input.VisitDate + " " + visitTimeStr
+		visitDateTime,err := time.Parse("2006-01-02 15:04",datetimeStr)
 		if err != nil {
 			http.Error(w, "日付フォーマットが不正です", http.StatusBadRequest)
 			return
