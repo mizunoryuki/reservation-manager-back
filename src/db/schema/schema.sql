@@ -20,8 +20,8 @@ CREATE TABLE stores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
-    business_start_time TIME NOT NULL,
-    business_end_time TIME NOT NULL,
+    business_start_time DATETIME NOT NULL,
+    business_end_time DATETIME NOT NULL,
     details TEXT,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
