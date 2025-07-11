@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"reservation-manager/db"
-	"reservation-manager/migration"
 	"reservation-manager/routes"
 
 	"github.com/joho/godotenv"
@@ -22,10 +21,10 @@ func main() {
 
 	client := db.NewClient()
 
-	err:= migration.Run(os.Getenv("DB_URL"))
-	if err != nil {
-		log.Println("Migration faild: %v",err)
-	}
+	// err:= migration.Run(os.Getenv("DB_URL"))
+	// if err != nil {
+	// 	log.Println("Migration faild: %v",err)
+	// }
 
 	mux:= routes.InitRoutes(client.Q)
 
