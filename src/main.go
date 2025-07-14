@@ -9,6 +9,7 @@ import (
 	"reservation-manager/routes"
 
 	"github.com/joho/godotenv"
+	"github.com/rs/cors"
 )
 
 func main() {
@@ -28,6 +29,13 @@ func main() {
 
 	mux:= routes.InitRoutes(client.Q)
 
+	handler := cors.New(cors.Options{
+		AllowedOrigins:   []string{"http://localhost:3000"}, // フロントエンドのURL
+		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedHeaders:   []string{"Authorization", "Content-Type"},
+		AllowCredentials: true,
+	}).Handler(mux)
+
 	log.Println("Listening on :4000")
-	http.ListenAndServe(":4000", mux)
+	http.ListenAndServe(":4000", handler)
 }
