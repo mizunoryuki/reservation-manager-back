@@ -53,10 +53,19 @@ func LogInHandler(db *generated.Queries) http.HandlerFunc {
 			return
 		}
 
+		http.SetCookie(w, &http.Cookie{
+			Name:     "access_token",
+			Value:    accessToken,
+			Path:     "/",
+			HttpOnly: true,
+			Secure:   false, 
+			SameSite: http.SameSiteLaxMode,
+			MaxAge:   60 * 60 * 24,    
+		})
+
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]string{
-			"access_token": accessToken,
 			"message":      "ログイン完了",
 		})
 	}

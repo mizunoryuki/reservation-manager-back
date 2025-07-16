@@ -15,12 +15,13 @@ func LogOutHandler(db *generated.Queries) http.HandlerFunc {
 			Value:    "",
 			Path:     "/",
 			HttpOnly: true,
-			Secure:   true, 
+			Secure:   false, 
 			SameSite: http.SameSiteLaxMode,
 			Expires:  time.Unix(0, 0),
 			MaxAge:   -1,
 		})
 
+		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"message":"logged out"}`))
 	}
