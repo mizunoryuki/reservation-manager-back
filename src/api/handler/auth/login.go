@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	"golang.org/x/crypto/bcrypt"
 
@@ -47,7 +48,7 @@ func LogInHandler(db *generated.Queries) http.HandlerFunc {
 
 
 		//JWT発行
-		accessToken, err := utils.GenerateJWT(string(user.ID),user.Role)
+		accessToken, err := utils.GenerateJWT(strconv.Itoa(int(user.ID)),user.Role)
 		if err != nil {
 			http.Error(w,"トークン生成に失敗しました",http.StatusInternalServerError)
 			return
