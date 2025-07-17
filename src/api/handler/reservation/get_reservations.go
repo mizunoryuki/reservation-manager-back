@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"reservation-manager/db/generated"
 	"reservation-manager/middleware"
+	"strconv"
 )
 
 
@@ -38,7 +39,14 @@ func GenGetReservationsHandler(db *generated.Queries) http.HandlerFunc{
 			return
 		}
 
-		reservations,err := db.GetReservationByID(r.Context(),int32(userID))
+		//ユーザIDをstr to intにする
+		userIDint,err := strconv.Atoi(userID)
+		if err != nil{
+			http.Error(w,"UserIDの形式が不正です",http.StatusBadRequest)
+		}
+
+
+		reservations,err := db.GetReservationByID(r.Context(),int32(userIDint))
 		if err != nil {
 			log.Printf("GetReservationByID error : %v",err)
 			http.Error(w,"ユーザidから予約情報の取得に失敗しました",http.StatusForbidden)

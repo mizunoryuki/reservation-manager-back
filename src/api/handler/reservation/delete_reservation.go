@@ -18,6 +18,13 @@ func DeleteReservationHandler(db *generated.Queries) http.HandlerFunc{
 			return
 		}
 
+		//ユーザIDをstr to intにする
+		userIDint,err := strconv.Atoi(userID)
+		if err != nil{
+			http.Error(w,"UserIDの形式が不正です",http.StatusBadRequest)
+		}
+
+
 		//パスパラメータから予約id取得
 		path := r.URL.Path
 		parts := strings.Split(path,"/")// `/admin/reservations/:id`
@@ -37,7 +44,7 @@ func DeleteReservationHandler(db *generated.Queries) http.HandlerFunc{
 
 		// 予約削除
 		//sqlcで生成したデータ構造に変換する
-		err  = db.DeleteReservationAsAdmin(r.Context(),int32(userID))
+		err  = db.DeleteReservationAsAdmin(r.Context(),int32(userIDint))
 		if err != nil {
 			log.Printf("DeleteReservationAsAdmin error : %v",err)
 			http.Error(w,"予約削除に失敗しました",http.StatusInternalServerError)
@@ -60,6 +67,12 @@ func GenDeleteReservationHandler(db *generated.Queries) http.HandlerFunc{
 			return
 		}
 
+		//ユーザIDをstr to intにする
+		userIDint,err := strconv.Atoi(userID)
+		if err != nil{
+			http.Error(w,"UserIDの形式が不正です",http.StatusBadRequest)
+		}
+
 		//パスパラメータから予約id取得
 		path := r.URL.Path
 		parts := strings.Split(path,"/")// `/user/reservations/:id`
@@ -77,14 +90,14 @@ func GenDeleteReservationHandler(db *generated.Queries) http.HandlerFunc{
 			return
 		}
 		//予約の照合
-		if reservation.UserID != int32(userID){
+		if reservation.UserID != int32(userIDint){
 			http.Error(w,"ユーザと予約者が異なります",http.StatusForbidden)
 			return
 		}
 
 		err = db.CancelReservation(r.Context(),generated.CancelReservationParams{
 			ID: int32(res_id_int),
-			UserID: int32(userID),
+			UserID: int32(userIDint),
 		})
 		if err != nil {
 			log.Printf("CancelReservation error : %v",err)

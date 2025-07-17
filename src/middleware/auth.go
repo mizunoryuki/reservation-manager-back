@@ -51,7 +51,7 @@ func AuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func UserIDFromContext(ctx context.Context) (int, bool) {
-	id, ok := ctx.Value(UserIDKey).(int)
+func UserIDFromContext(ctx context.Context) (string, bool) {
+	id, ok := ctx.Value(UserIDKey).(string)
 	return id, ok
 }

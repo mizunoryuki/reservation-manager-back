@@ -7,6 +7,7 @@ import (
 	"reservation-manager/db/generated"
 	"reservation-manager/middleware"
 	"reservation-manager/models"
+	"strconv"
 	"time"
 )
 
@@ -18,6 +19,12 @@ func CreateReservationHandler(db *generated.Queries) http.HandlerFunc{
 		if !ok {
 			http.Error(w,"UserIDが取得できません",http.StatusUnauthorized)
 			return
+		}
+
+		//ユーザIDをstr to intする
+		userIDint,err := strconv.Atoi(userID)
+		if err != nil{
+			http.Error(w,"UserIDの形式が不正です",http.StatusBadRequest)
 		}
 
 		// JSONデコード
@@ -35,14 +42,14 @@ func CreateReservationHandler(db *generated.Queries) http.HandlerFunc{
 		}
 
 		//店舗idが正しいか
-		_,err := db.GetStoreByID(r.Context(),int32(input.StoreID))
+		_,err = db.GetStoreByID(r.Context(),int32(input.StoreID))
 		if err != nil {
 			http.Error(w,"指定された店舗idが存在しません",http.StatusBadRequest)
 			return
 		}
 
 		//ユーザidが正しいか
-		_,err = db.GetUserByID(r.Context(),int32(userID)) 
+		_,err = db.GetUserByID(r.Context(),int32(userIDint)) 
 		if err != nil {
 			http.Error(w,"指定されたユーザidが存在しません",http.StatusBadRequest)
 			return
@@ -69,7 +76,7 @@ func CreateReservationHandler(db *generated.Queries) http.HandlerFunc{
 		// 予約作成
 		//sqlcで生成したデータ構造に変換する
 		err  = db.CreateReservation(r.Context(),generated.CreateReservationParams{
-			UserID: int32(userID),
+			UserID: int32(userIDint),
 			StoreID: int32(input.StoreID),
 			VisitDate: visitDateTime,
 
