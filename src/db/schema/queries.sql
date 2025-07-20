@@ -61,6 +61,43 @@ SELECT * FROM reservations
 WHERE user_id = ?
 ORDER BY visit_date DESC;
 
+-- name: GetReservationsWithStoreNameByUser :many
+SELECT
+  r.id AS id,
+  r.user_id AS user_id,
+  r.store_id AS store_id,
+  r.visit_date AS visit_date,
+  r.reserved_at AS reserved_at,
+  s.name AS store_name
+FROM
+  reservations r
+JOIN
+  stores s ON r.store_id = s.id
+WHERE
+  r.user_id = ?
+ORDER BY
+  r.visit_date DESC;
+
+-- name: GetAllReservationsWithStoreNameAndUserName :many
+SELECT
+  r.id AS id,
+  r.user_id AS user_id,
+  r.store_id AS store_id,
+  r.visit_date AS visit_date,
+  r.reserved_at AS reserved_at,
+  s.name AS store_name,
+  u.name AS user_name
+FROM
+  reservations r
+JOIN
+  stores s ON r.store_id = s.id
+JOIN
+  users u ON r.user_id = u.id
+ORDER BY
+  r.visit_date DESC;
+
+
+
 -- name: GetReservationsByStoreAndDate :many
 SELECT * FROM reservations
 WHERE store_id = ? AND DATE(visit_date) = ?;

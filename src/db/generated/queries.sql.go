@@ -163,6 +163,66 @@ func (q *Queries) GetAllReservations(ctx context.Context) ([]Reservation, error)
 	return items, nil
 }
 
+const getAllReservationsWithStoreNameAndUserName = `-- name: GetAllReservationsWithStoreNameAndUserName :many
+SELECT
+  r.id AS id,
+  r.user_id AS user_id,
+  r.store_id AS store_id,
+  r.visit_date AS visit_date,
+  r.reserved_at AS reserved_at,
+  s.name AS store_name,
+  u.name AS user_name
+FROM
+  reservations r
+JOIN
+  stores s ON r.store_id = s.id
+JOIN
+  users u ON r.user_id = u.id
+ORDER BY
+  r.visit_date DESC
+`
+
+type GetAllReservationsWithStoreNameAndUserNameRow struct {
+	ID         int32
+	UserID     int32
+	StoreID    int32
+	VisitDate  time.Time
+	ReservedAt time.Time
+	StoreName  string
+	UserName   string
+}
+
+func (q *Queries) GetAllReservationsWithStoreNameAndUserName(ctx context.Context) ([]GetAllReservationsWithStoreNameAndUserNameRow, error) {
+	rows, err := q.db.QueryContext(ctx, getAllReservationsWithStoreNameAndUserName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetAllReservationsWithStoreNameAndUserNameRow
+	for rows.Next() {
+		var i GetAllReservationsWithStoreNameAndUserNameRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.StoreID,
+			&i.VisitDate,
+			&i.ReservedAt,
+			&i.StoreName,
+			&i.UserName,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAllStores = `-- name: GetAllStores :many
 SELECT id, name, address, business_start_time, business_end_time, details, created_at FROM stores
 `
@@ -294,6 +354,63 @@ func (q *Queries) GetReservationsByUser(ctx context.Context, userID int32) ([]Re
 			&i.StoreID,
 			&i.VisitDate,
 			&i.ReservedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getReservationsWithStoreNameByUser = `-- name: GetReservationsWithStoreNameByUser :many
+SELECT
+  r.id AS id,
+  r.user_id AS user_id,
+  r.store_id AS store_id,
+  r.visit_date AS visit_date,
+  r.reserved_at AS reserved_at,
+  s.name AS store_name
+FROM
+  reservations r
+JOIN
+  stores s ON r.store_id = s.id
+WHERE
+  r.user_id = ?
+ORDER BY
+  r.visit_date DESC
+`
+
+type GetReservationsWithStoreNameByUserRow struct {
+	ID         int32
+	UserID     int32
+	StoreID    int32
+	VisitDate  time.Time
+	ReservedAt time.Time
+	StoreName  string
+}
+
+func (q *Queries) GetReservationsWithStoreNameByUser(ctx context.Context, userID int32) ([]GetReservationsWithStoreNameByUserRow, error) {
+	rows, err := q.db.QueryContext(ctx, getReservationsWithStoreNameByUser, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GetReservationsWithStoreNameByUserRow
+	for rows.Next() {
+		var i GetReservationsWithStoreNameByUserRow
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.StoreID,
+			&i.VisitDate,
+			&i.ReservedAt,
+			&i.StoreName,
 		); err != nil {
 			return nil, err
 		}

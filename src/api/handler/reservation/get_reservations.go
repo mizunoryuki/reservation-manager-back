@@ -14,7 +14,7 @@ import (
 func GetReservationsHandler(db *generated.Queries) http.HandlerFunc{
 return func(w http.ResponseWriter, r *http.Request) {
 	//予約取得
-	reservations, err := db.GetAllReservations(r.Context())
+	reservations, err := db.GetAllReservationsWithStoreNameAndUserName(r.Context())
 	if err != nil {
 		log.Printf("GetAllReservations error : %v",err)
 		http.Error(w,"予約の一覧取得に失敗しました",http.StatusInternalServerError)
@@ -46,7 +46,7 @@ func GenGetReservationsHandler(db *generated.Queries) http.HandlerFunc{
 		}
 
 
-		reservations,err := db.GetReservationByID(r.Context(),int32(userIDint))
+		reservations,err := db.GetReservationsWithStoreNameByUser(r.Context(),int32(userIDint))
 		if err != nil {
 			log.Printf("GetReservationByID error : %v",err)
 			http.Error(w,"ユーザidから予約情報の取得に失敗しました",http.StatusForbidden)
