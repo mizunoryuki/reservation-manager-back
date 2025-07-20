@@ -22,11 +22,6 @@ func main() {
 
 	client := db.NewClient()
 
-	// err:= migration.Run(os.Getenv("DB_URL"))
-	// if err != nil {
-	// 	log.Println("Migration faild: %v",err)
-	// }
-
 	mux:= routes.InitRoutes(client.Q)
 
 	handler := cors.New(cors.Options{
